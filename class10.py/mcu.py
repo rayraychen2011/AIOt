@@ -203,3 +203,26 @@ class LED:
             self.RED.duty(RED_value)
             self.GREEN.duty(GREEN_value)
             self.BLUE.duty(BLUE_value)
+
+
+class MQTT:
+    def __init__(self, client_id, server, user, password, keepalive):
+        self.client = MQTTClient(
+            client_id, server, user=user, password=password, keepalive=keepalive
+        )
+
+    def connect(self):
+        try:
+            self.client.connect()
+        except:
+            sys.exit()
+        finally:
+            print("connected to %s" % self.client.server)
+
+    def subscribe(self, topic: str, callback: function):
+        self.client.set_callback(callback)
+        self.client.subscribe(topic)
+
+    def check_msg(self):
+        self.client.check_msg()
+        self.client.ping()
